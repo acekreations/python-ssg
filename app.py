@@ -27,6 +27,7 @@ for post in posts:
 	html = html.replace("\n", " ")
 	slug = path.split("_")[1]
 	date = path.split("_")[0]
+	date = date[:4] + "-" + date[4:6] + "-" + date[6:]
 	url = date + "/" + slug
 	post_data.append({"path": path, "slug": slug, "url": url, "date": date, "fm": fm, "html": html})
 
