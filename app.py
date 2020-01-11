@@ -31,13 +31,18 @@ for post in posts:
 	url = date + "/" + slug
 	post_data.append({"path": path, "slug": slug, "url": url, "date": date, "fm": fm, "html": html})
 
+# copy image folder and replace image urls
+shutil.copytree("src/images", "build/images")
+for post in post_data:
+	post["html"] = post["html"].replace("/images/", "../../images/")
+
 # get blog post template file and parse into before and after content segments
 f = open("src/templates/post.html", "r", encoding="utf-8")
 post_template = f.read()
 f.close()
 post_insert = post_template.split("<!-- content -->")
 
-# build blog post pages
+# build blog post pages and directories
 for post in post_data:
 	path = build_path + post['date'] + "/" + post['slug']
 	os.makedirs(path)
@@ -52,7 +57,6 @@ f = open("src/templates/home.html", "r", encoding="utf-8")
 home_template = f.read()
 f.close()
 home_template = home_template.split("<!-- posts -->")
-#print(home_template)
 
 # get post summary template
 f = open("src/templates/summary.html", "r", encoding="utf-8")
@@ -62,7 +66,9 @@ f.close()
 # build summaries
 summaries = []
 for post in post_data:
-	summaries.append(revar.revar(summary_template, post))
+	summary = revar.revar(summary_template, post)
+	summary = summary.replace("/images/", "../../images/")
+	summaries.append(summary)
 
 # insert summaries into home template
 home_template[1:1] = summaries
