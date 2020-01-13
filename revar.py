@@ -16,6 +16,7 @@ def  revar(source, v, page_num):
 				source[i] = v["fm"][key]
 				source = remove_comment(i, source)
 		if word == "$url":
+			# move url up a directory if summary will be in a pagination folder
 			if page_num == 1:
 				source[i] = v["url"]
 				source = remove_comment(i, source)

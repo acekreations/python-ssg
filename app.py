@@ -37,6 +37,9 @@ for post in posts:
 	url = date + "/" + slug
 	post_data.append({"path": path, "slug": slug, "url": url, "date": date, "fm": fm, "html": html})
 
+# copy stylesheet
+shutil.copyfile("src/templates/style.css", "build/style.css")
+
 # copy image folder and replace image urls
 shutil.copytree("src/images", "build/images")
 for post in post_data:
