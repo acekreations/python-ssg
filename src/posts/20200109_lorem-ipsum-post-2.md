@@ -1,5 +1,5 @@
 <!--
-title: Lorem Ipsum Post Test
+title: Lorem Ipsum Post Test 2
 date: Jan 10, 2020
 thumbnail: /images/test.jpg
 -->

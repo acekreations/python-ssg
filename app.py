@@ -1,4 +1,9 @@
-import os, shutil, front_matter, markdown, revar
+import os, shutil, front_matter, markdown, revar, json, time
+
+start_time = time.time()
+
+with open("config.json") as json_file:
+    config = json.load(json_file)
 
 build_path = "build/"
 
@@ -53,28 +58,53 @@ for post in post_data:
 
 # build home page
 # get home page template
-f = open("src/templates/home.html", "r", encoding="utf-8")
-home_template = f.read()
-f.close()
-home_template = home_template.split("<!-- posts -->")
+def get_home_template():
+	f = open("src/templates/home.html", "r", encoding="utf-8")
+	ht = f.read()
+	f.close()
+	ht = ht.split("<!-- posts -->")
+	return ht
 
 # get post summary template
 f = open("src/templates/summary.html", "r", encoding="utf-8")
 summary_template = f.read()
 f.close()
 
-# build summaries
-summaries = []
+# build summaries into dictionary where key represents pagination
+summaries = {}
+x = 1
+i = 1
 for post in post_data:
 	summary = revar.revar(summary_template, post)
 	summary = summary.replace("/images/", "../../images/")
-	summaries.append(summary)
 
-# insert summaries into home template
-home_template[1:1] = summaries
-home = "".join(home_template)
+	if i in summaries.keys():
+		summaries[i].append(summary)
+	else:
+		summaries[i] = [summary]
 
-# write index(home) file 
-f = open(build_path + "index.html", "x")
-f.write(home)
-f.close()
+	if x == config["posts_per_page"]:
+		i += 1
+		x = 1
+	else:
+		x += 1
+
+def build_index(path, summaries, template):
+	summaries = " ".join(summaries)
+	template[1:1] = summaries
+	home = "".join(template)
+	f = open(path + "index.html", "x")
+	f.write(home)
+	f.close()
+
+# create index.html files with pagination folders
+for page in summaries:
+	if page == 1:
+		build_index(build_path, summaries[page], get_home_template())
+	else:
+		path = build_path + str(page) + "/"
+		if not os.path.exists(path):
+			os.makedirs(path)
+		build_index(path, summaries[page], get_home_template())
+
+print("Build time: %s seconds" % (time.time() - start_time))
