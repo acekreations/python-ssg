@@ -2,6 +2,7 @@ import os, shutil, front_matter, markdown, revar, json, time
 
 start_time = time.time()
 
+# get config options
 with open("config.json") as json_file:
     config = json.load(json_file)
 
@@ -72,22 +73,22 @@ f.close()
 
 # build summaries into dictionary where key represents pagination
 summaries = {}
-x = 1
 i = 1
+page_num = 1
 for post in post_data:
-	summary = revar.revar(summary_template, post)
+	summary = revar.revar(summary_template, post, page_num)
 	summary = summary.replace("/images/", "../../images/")
 
-	if i in summaries.keys():
-		summaries[i].append(summary)
+	if page_num in summaries.keys():
+		summaries[page_num].append(summary)
 	else:
-		summaries[i] = [summary]
+		summaries[page_num] = [summary]
 
-	if x == config["posts_per_page"]:
-		i += 1
-		x = 1
+	if i == config["posts_per_page"]:
+		page_num += 1
+		i = 1
 	else:
-		x += 1
+		i += 1
 
 def build_index(path, summaries, template):
 	summaries = " ".join(summaries)
