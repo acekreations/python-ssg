@@ -1,4 +1,4 @@
-import os, shutil, front_matter, markdown, revar, json, time
+import os, shutil, front_matter, markdown, revar, json, time, datetime
 
 start_time = time.time()
 
@@ -32,10 +32,12 @@ for post in posts:
 	html = markdown.markdown(content)
 	html = html.replace("\n", " ")
 	slug = path.split("_")[1]
-	date = path.split("_")[0]
-	date = date[:4] + "-" + date[4:6] + "-" + date[6:]
+	date_raw = path.split("_")[0]
+	date_obj = datetime.datetime(int(date_raw[:4]), int(date_raw[4:6]), int(date_raw[6:]))
+	date = date_obj.strftime("%Y-%m-%d")
+	date_pretty = date_obj.strftime("%b %d, %Y")
 	url = date + "/" + slug
-	post_data.append({"path": path, "slug": slug, "url": url, "date": date, "fm": fm, "html": html})
+	post_data.append({"path": path, "slug": slug, "url": url, "date": date, "date_pretty": date_pretty, "fm": fm, "html": html})
 
 # copy stylesheet
 shutil.copyfile("src/templates/style.css", "build/style.css")

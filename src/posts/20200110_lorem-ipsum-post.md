@@ -1,6 +1,6 @@
 <!--
 title: Lorem Ipsum Post Test
-date: Jan 10, 2020
+summary: Nulla vitae elit libero, a pharetra augue. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Nullam id dolor id nibh ultricies vehicula ut id elit.
 -->
 
 # Lorem
